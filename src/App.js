@@ -7,6 +7,9 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
+
+const graphqlEndpoint = 'https://graphql-pokeapi.graphcdn.app/';
+
 const GET_POKEMONS = gql`
   query getPokemons {
     pokemons(limit: 10, offset: 0) {
@@ -23,6 +26,43 @@ const GET_POKEMONS = gql`
     }
   }
 `;
+
+
+
+const graphqlQuery = `
+  query getPokemons {
+    pokemons(limit: 10, offset: 0) {
+      count
+      next
+      previous
+      status
+      message
+      results {
+        id
+        name
+        image
+      }
+    }
+  }
+`;
+
+const fetchOptions = {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ query: graphqlQuery }),
+};
+
+fetch(graphqlEndpoint, fetchOptions)
+    .then(response => response.json())
+    .then(data => {
+        console.log('GraphQL Data:', data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+
 
 
 function App() {
